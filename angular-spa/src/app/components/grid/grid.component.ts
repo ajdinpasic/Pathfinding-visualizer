@@ -23,7 +23,6 @@ export class GridComponent implements OnInit {
   public ctx: any;
   public shape: any[] = new Array(95);
 
-
   constructor(private GridMenuSvc: GridMenuService) {}
 
   // private mouseTest() {
@@ -38,7 +37,6 @@ export class GridComponent implements OnInit {
   // }
 
   ngOnInit(): void {
-
     for (let i=0; i<this.shape.length;i++) {
           this.shape[i] = new Array(40);
     }
@@ -46,7 +44,7 @@ export class GridComponent implements OnInit {
     this.ctx = this.canvas.getContext('2d');
     this.ctx.canvas.height = 520;
     this.ctx.canvas.width = 1235;
-    this.ctx.canvas.style.imageRendering = 'auto';//default
+    this.ctx.canvas.style.imageRendering = 'auto';
     this.ctx.imageSmoothingEnabled = false;
 
     //TODO: images
@@ -96,6 +94,10 @@ export class GridComponent implements OnInit {
     this.generateRandomWalls();
   })
 
+  this.GridMenuSvc.loadSampleMazeEmitter.subscribe((data:any) => {
+    this.loadSampleMaze(data)
+  })
+
   }
 
   resetGrid(): void {
@@ -116,6 +118,9 @@ export class GridComponent implements OnInit {
         if(i == 4 && j == 4) {
           this.ctx.fillStyle = this.startNodeColor;
           this.ctx.fillRect(x,y,this.dimension,this.dimension);
+          // let tt = new Image();
+          // tt.src = '/assets/location.jpg'
+          // this.ctx.drawImage(tt,x,y,this.dimension,this.dimension)
           type = "Start"
           
         }
@@ -250,7 +255,7 @@ export class GridComponent implements OnInit {
     }
   }
 
-  generateRandomWalls() {
+  async generateRandomWalls() {
     let start;
     let end;
     for (let i = 0; i < this.shape.length; i++) {
@@ -276,9 +281,11 @@ export class GridComponent implements OnInit {
       }
     }
     //restore start and end
-    this.ctx.fillStyle = "#FF3600";
-    this.ctx.fillRect(start.x, start.y, this.dimension - 1, this.dimension - 1);
+    // this.ctx.fillStyle = "#FF3600";
     this.ctx.fillStyle = "#00AB5C";
+    this.ctx.fillRect(start.x, start.y, this.dimension - 1, this.dimension - 1);
+    // this.ctx.fillStyle = "#00AB5C";
+    this.ctx.fillStyle = "#FF3600";
     this.ctx.fillRect(end.x, end.y, this.dimension - 1, this.dimension - 1);
 
 
@@ -302,7 +309,64 @@ export class GridComponent implements OnInit {
 
 
       }
+      await new Promise<void>(resolve =>
+        setTimeout(() => {
+          resolve();
+        }, 10)
+      );
     }
+  }
+
+  async loadSampleMaze(data: any) {
+    data = data + "";
+    data.trim();
+
+    let dataNew = data.split('\n');
+
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.GridMenuSvc.setMenu(true)
+
+    for (let i = 0; i < 95; i++) {
+      for (let j = 0; j < 40; j++) {
+        if (dataNew[j][i] == "1") {
+          this.ctx.lineWidth = this.lineWidth;
+          this.ctx.fillStyle = "#000000";
+          this.shape[i][j].type = "Wall";
+
+          this.ctx.fillRect(this.shape[i][j].x, this.shape[i][j].y, this.dimension - 0.1, this.dimension - 0.1);
+        }
+        if (dataNew[j][i] == "0") {
+          this.shape[i][j].type = "";
+          this.ctx.fillStyle = "#FFFFFF"
+          //draw it
+          this.ctx.strokeRect(this.shape[i][j].x, this.shape[i][j].y, this.dimension, this.dimension);
+        }
+        if (dataNew[j][i] == "2") {
+          this.shape[i][j].type = "Start";
+          //draw it
+          this.ctx.strokeRect(this.shape[i][j].x, this.shape[i][j].y, this.dimension, this.dimension);
+
+          this.ctx.fillStyle = this.startNodeColor;
+
+          this.ctx.fillRect(this.shape[i][j].x, this.shape[i][j].y, this.dimension, this.dimension);
+        }
+        if (dataNew[j][i] == "3") {
+          this.ctx.fillStyle = this.endNodeColor;
+
+          this.shape[i][j].type = "End";
+          //draw it
+          this.ctx.strokeRect(this.shape[i][j].x, this.shape[i][j].y, this.dimension, this.dimension);
+          this.ctx.fillRect(this.shape[i][j].x, this.shape[i][j].y, this.dimension, this.dimension);
+        }
+      }
+      await new Promise<void>(resolve =>
+        setTimeout(() => {
+          resolve();
+        }, 10)
+      );
+    }
+     this.GridMenuSvc.setMenu(false)
   }
 
 }

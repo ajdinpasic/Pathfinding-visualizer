@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GridMenuService } from 'src/app/services/grid-menu.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-grid-menu',
@@ -11,16 +12,20 @@ export class GridMenuComponent implements OnInit {
   public action : string = "";
   public algo : string = "";
   public menuDisabled: boolean = false;
-  public content : string = ""
+  public modal : any = [];
   public page: number = 1;
 
-  constructor(private GridMenuSvc: GridMenuService) { }
+  constructor(private GridMenuSvc: GridMenuService, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.action = this.GridMenuSvc.getAction();
     this.algo = this.GridMenuSvc.getAlgo();
     this.menuDisabled = this.GridMenuSvc.isMenuDisabled();
-    this.content = this.GridMenuSvc.getModalContext(1);
+    this.modal = this.GridMenuSvc.getModalContext(1);
+
+    this.GridMenuSvc.menuChangedEmitter.subscribe(() => {
+       this.menuDisabled = this.GridMenuSvc.isMenuDisabled();
+    });
   }
 
   updateAction(type: number): void {
@@ -50,7 +55,7 @@ export class GridMenuComponent implements OnInit {
           this.algo = "Dijkstra";
           break;
         case 3:
-          this.algo = "Breadth-first search";
+          this.algo = "BFS";
           break;
         }
     this.GridMenuSvc.setAction(this.algo)
@@ -64,14 +69,23 @@ export class GridMenuComponent implements OnInit {
     this.GridMenuSvc.generateRandomWalls();
   }
 
+  generateSampleMaze(path: string) {
+    this.http.get(path + "", { responseType: 'text' })
+      .subscribe((data:any) => this.loadSampleMaze(data));
+  }
+
+  loadSampleMaze(data:any) {
+    this.GridMenuSvc.loadSampleMaze(data)
+  }
+
   nextPage() {
     this.page++;
-    this.content = this.GridMenuSvc.getModalContext(this.page);
+    this.modal = this.GridMenuSvc.getModalContext(this.page);
   }
 
   previousPage() {
     this.page--;
-     this.content = this.GridMenuSvc.getModalContext(this.page);
+     this.modal = this.GridMenuSvc.getModalContext(this.page);
   }
 
 

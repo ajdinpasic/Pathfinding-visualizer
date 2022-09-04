@@ -66,6 +66,20 @@ li {
     display: block !important;
 }
 
+.pic1 {
+    width: 200px;
+    height: 200px;
+    margin-left: 150px;
+    margin-top: 10px;
+}
+
+.pic2 {
+    width: 200px;
+    height: 200px;
+    margin-left: 150px;
+    margin-top: 10px;
+}
+
 @media (max-width: 576px) {
     .nav-item {
         width: 100%;

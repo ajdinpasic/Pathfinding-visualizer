@@ -30,7 +30,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" (click)="updateAlgo(1)">A*</a>
                             <a class="dropdown-item" (click)="updateAlgo(2)">Dijkstra</a>
-                            <a class="dropdown-item" (click)="updateAlgo(3)">Breadth-first search</a>
+                            <a class="dropdown-item" (click)="updateAlgo(3)">BFS</a>
                         </div>
                     </div>
                 
@@ -41,10 +41,10 @@
                             Bonus items
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item"(click) = "generateRandomWalls()" >Random walls</a>
-                            <a class="dropdown-item">Sample maze#1</a>
-                            <a class="dropdown-item">Sample maze#2</a>
-                            <a class="dropdown-item">Sample maze#3</a>
+                            <a class="dropdown-item" (click) = "generateRandomWalls()" >Random walls</a>
+                            <a class="dropdown-item" (click) = "generateSampleMaze('assets/Maze1.txt')">Sample maze#1</a>
+                            <a class="dropdown-item" (click) = "generateSampleMaze('assets/Maze2.txt')">Sample maze#2</a>
+                            <a class="dropdown-item" (click) = "generateSampleMaze('assets/Maze3.txt')">Sample maze#3</a>
                         </div>
                     </div>
                 </li>
@@ -72,13 +72,15 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Pathfinding guide</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{modal[0]}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                {{content}}
+                {{modal[1]}}
+                <br>
+                <img src="{{modal[2]}}" alt="Logo" [ngClass]="modal[3]">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" [disabled]="page == 1" (click)="previousPage()">Previous</button>
