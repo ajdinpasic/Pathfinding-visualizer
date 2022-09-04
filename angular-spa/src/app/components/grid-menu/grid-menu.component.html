@@ -57,10 +57,33 @@
                 <li class="nav-item active navs-font">
                     <a class="nav-link" [ngClass]="{'disable-links' : menuDisabled}">Analytics</a>
                 </li>
-                <li class="nav-item active navs-font">
+                <li class="nav-item active navs-font"  data-toggle="modal" data-target="#tutorialModal">
                     <a class="nav-link"[ngClass]="{'disable-links' : menuDisabled}">Tutorial</a>
                 </li>
             </ul>
         </div>
     </nav>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="tutorialModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pathfinding guide</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{content}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" [disabled]="page == 1" (click)="previousPage()">Previous</button>
+                <button type="button" class="btn btn-success" (click)="nextPage()">Next</button>
+            </div>
+        </div>
+    </div>
 </div>

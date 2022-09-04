@@ -40,4 +40,17 @@ export class GridMenuService {
     this.clearBoardEmmiter.emit();
   }
 
+  getModalContext(page: number): string {
+    let final = "";
+    switch(page) {
+      case 1:
+        final = "hello";
+        break;
+      case 2:
+        final = "there";
+        break;
+    }
+    return final;
+  }
+
 }

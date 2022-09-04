@@ -11,6 +11,8 @@ export class GridMenuComponent implements OnInit {
   public action : string = "";
   public algo : string = "";
   public menuDisabled: boolean = false;
+  public content : string = ""
+  public page: number = 1;
 
   constructor(private GridMenuSvc: GridMenuService) { }
 
@@ -18,6 +20,7 @@ export class GridMenuComponent implements OnInit {
     this.action = this.GridMenuSvc.getAction();
     this.algo = this.GridMenuSvc.getAlgo();
     this.menuDisabled = this.GridMenuSvc.isMenuDisabled();
+    this.content = this.GridMenuSvc.getModalContext(1);
   }
 
   updateAction(type: number): void {
@@ -55,6 +58,16 @@ export class GridMenuComponent implements OnInit {
 
   clearBoard() {
     this.GridMenuSvc.clearBoard();
+  }
+
+  nextPage() {
+    this.page++;
+    this.content = this.GridMenuSvc.getModalContext(this.page);
+  }
+
+  previousPage() {
+    this.page--;
+     this.content = this.GridMenuSvc.getModalContext(this.page);
   }
 
 
