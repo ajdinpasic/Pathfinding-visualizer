@@ -52,6 +52,9 @@
                     <a class="nav-link" [ngClass]="{'disable-links' : menuDisabled}">Visualize</a>
                 </li>
                 <li class="nav-item active navs-font">
+                    <a class="nav-link" [ngClass]="{'disable-links' : menuDisabled}" (click)="clearBoard()">Clear board</a>
+                </li>
+                <li class="nav-item active navs-font">
                     <a class="nav-link" [ngClass]="{'disable-links' : menuDisabled}">Analytics</a>
                 </li>
                 <li class="nav-item active navs-font">
