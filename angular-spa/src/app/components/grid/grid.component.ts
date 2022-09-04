@@ -18,7 +18,7 @@ export class GridComponent implements OnInit {
   public endNodeColor: string = "#cc4129";
   public dimension: number = 13;
   public animationDelay: number = 15;
-  public lineWidth: number = 0.05;
+  public lineWidth: number = 0.10;
   public canvas: any;
   public ctx: any;
   public shape: any[] = new Array(95);
@@ -46,6 +46,7 @@ export class GridComponent implements OnInit {
     this.ctx = this.canvas.getContext('2d');
     this.ctx.canvas.height = 520;
     this.ctx.canvas.width = 1235;
+    this.ctx.canvas.style.imageRendering = 'auto';//default
     this.ctx.imageSmoothingEnabled = false;
 
     //TODO: images
