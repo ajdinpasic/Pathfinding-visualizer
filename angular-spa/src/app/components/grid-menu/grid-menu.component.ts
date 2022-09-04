@@ -88,5 +88,10 @@ export class GridMenuComponent implements OnInit {
      this.modal = this.GridMenuSvc.getModalContext(this.page);
   }
 
+  closeModal() {
+    this.page = 1;
+    this.modal = this.GridMenuSvc.getModalContext(this.page)
+  }
+
 
 }
