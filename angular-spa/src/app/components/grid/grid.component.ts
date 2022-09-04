@@ -135,7 +135,7 @@ export class GridComponent implements OnInit {
    
   }
 
-  manipulateWall(event: any, cx:any, cy: any) {
+  async manipulateWall(event: any, cx:any, cy: any) {
    
     if(!event.which || this.GridMenuSvc.isMenuDisabled()) {
         return;
@@ -155,6 +155,11 @@ export class GridComponent implements OnInit {
               let dx = 0;
               let dy = 0;
               for (let k = this.dimension / 2; k > 0; k--) {
+                 await new Promise<void>(resolve =>
+                  setTimeout(() => {
+                    resolve();
+                  }, this.animationDelay)
+                );
                 this.ctx.fillRect(this.shape[i][j].x + x, this.shape[i][j].y + y, dx - 0.1, dy - 0.1);
 
                 x--;
