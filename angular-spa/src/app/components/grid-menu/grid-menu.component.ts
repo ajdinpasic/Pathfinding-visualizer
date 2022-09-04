@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GridMenuService } from 'src/app/services/grid-menu.service';
 
 @Component({
   selector: 'app-grid-menu',
@@ -7,13 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GridMenuComponent implements OnInit {
 
-  public action : string = "Select action";
-  public algo : string = "Select algorithm";
+  public action : string = "";
+  public algo : string = "";
   public menuDisabled: boolean = false;
 
-  constructor() { }
+  constructor(private GridMenuSvc: GridMenuService) { }
 
   ngOnInit(): void {
+    this.action = this.GridMenuSvc.getAction();
+    this.algo = this.GridMenuSvc.getAlgo();
+    this.menuDisabled = this.GridMenuSvc.isMenuDisabled();
   }
 
   updateAction(type: number): void {
@@ -28,9 +32,10 @@ export class GridMenuComponent implements OnInit {
         this.action = "Change start node";
         break;
       case 4:
-        this.action = "Change start node";
+        this.action = "Change end node";
         break;
     }
+    this.GridMenuSvc.setAction(this.action)
   }
 
   updateAlgo(type: number): void {
@@ -45,6 +50,12 @@ export class GridMenuComponent implements OnInit {
           this.algo = "Breadth-first search";
           break;
         }
+    this.GridMenuSvc.setAction(this.algo)
   }
+
+  clearBoard() {
+    this.GridMenuSvc.clearBoard();
+  }
+
 
 }
