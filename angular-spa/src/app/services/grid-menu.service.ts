@@ -9,6 +9,7 @@ export class GridMenuService {
   public algo : string = "Select algorithm";
   public menuDisabled: boolean = false;
   @Output() clearBoardEmmiter: EventEmitter<null> = new EventEmitter();
+  @Output() generateRandomWallsEmitter: EventEmitter<null> = new EventEmitter();
 
   constructor() { }
 
@@ -38,6 +39,10 @@ export class GridMenuService {
 
   clearBoard() {
     this.clearBoardEmmiter.emit();
+  }
+
+  generateRandomWalls() {
+    this.generateRandomWallsEmitter.emit();
   }
 
   getModalContext(page: number): string {

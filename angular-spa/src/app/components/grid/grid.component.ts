@@ -92,6 +92,10 @@ export class GridComponent implements OnInit {
     console.log("Board cleared")
     });
 
+  this.GridMenuSvc.generateRandomWallsEmitter.subscribe(() => {
+    this.generateRandomWalls();
+  })
+
   }
 
   resetGrid(): void {
@@ -242,6 +246,61 @@ export class GridComponent implements OnInit {
             this.ctx.fillRect(this.shape[i][j].x, this.shape[i][j].y, this.dimension, this.dimension);
             }
            }
+      }
+    }
+  }
+
+  generateRandomWalls() {
+    let start;
+    let end;
+    for (let i = 0; i < this.shape.length; i++) {
+      for (let j = 0; j < this.shape[0].length; j++) {
+        if (this.shape[i][j].type == "Start") {
+          start = this.shape[i][j];
+        }
+        else if (this.shape[i][j].type == "End") {
+          end = this.shape[i][j];
+        }
+        else {
+          this.shape[i][j].type = "";
+        }
+
+      }
+    }
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    //restore grid
+    for (let i = 0; i < this.shape.length; i++) {
+      for (let j = 0; j < this.shape[0].length; j++) {
+        this.ctx.strokeRect(this.shape[i][j].x, this.shape[i][j].y, this.dimension, this.dimension);
+      }
+    }
+    //restore start and end
+    this.ctx.fillStyle = "#FF3600";
+    this.ctx.fillRect(start.x, start.y, this.dimension - 1, this.dimension - 1);
+    this.ctx.fillStyle = "#00AB5C";
+    this.ctx.fillRect(end.x, end.y, this.dimension - 1, this.dimension - 1);
+
+
+    //random walls
+    for (let i = 0; i < this.shape.length; i++) {
+      for (let j = 0; j < this.shape[0].length; j++) {
+
+        if (this.shape[i][j].type != "Start" && this.shape[i][j].type != "End") {
+          let rand = Math.random();
+
+          if (rand < 0.35) {
+            this.shape[i][j].type == "Wall"
+            this.ctx.lineWidth = this.lineWidth;
+            this.ctx.fillStyle = "#000000";
+            this.shape[i][j].type = "Wall";
+
+            this.ctx.fillRect(this.shape[i][j].x + 0.5, this.shape[i][j].y + 0.5, this.dimension - 1, this.dimension - 1);
+
+          }
+        }
+
+
       }
     }
   }

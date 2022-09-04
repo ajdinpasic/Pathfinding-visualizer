@@ -60,6 +60,10 @@ export class GridMenuComponent implements OnInit {
     this.GridMenuSvc.clearBoard();
   }
 
+  generateRandomWalls() {
+    this.GridMenuSvc.generateRandomWalls();
+  }
+
   nextPage() {
     this.page++;
     this.content = this.GridMenuSvc.getModalContext(this.page);
