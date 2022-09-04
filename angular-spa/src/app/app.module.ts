@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { GridMenuComponent } from './components/grid-menu/grid-menu.component';
 import { GridComponent } from './components/grid/grid.component';
+import { GridMenuService } from './services/grid-menu.service';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,7 @@ import { GridComponent } from './components/grid/grid.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [GridMenuService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
