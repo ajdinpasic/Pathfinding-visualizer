@@ -80,20 +80,28 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="tutorialModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+ <div class="modal fade" id="tutorialModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog tutorial" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{modal[0]}}</h5>
+                <h3 class="modal-title" id="exampleModalLabel" style="width:500px;text-align: center;">{{modal.header}}</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                {{modal[1]}}
+                <p *ngIf="modal.content">{{modal.content}}</p>
+                <ul *ngIf="modal.hasDetails">
+                <li><b>A*: </b>arguably the best pathfinding algorithm; uses heuristics to guarantee the shortest path much faster than Dijkstra's
+                Algorithm</li>
                 <br>
-                <img src="{{modal[2]}}" alt="Logo" [ngClass]="modal[3]">
+                <li><b>Dijkstra's Algorithm: </b>the father of pathfinding algorithms; guarantees the shortest path</li>
+                <br>
+                    <li><b>Breadth-first search: </b>a great algorithm; guarantees the shortest path</li>
+                </ul>
+                <br>
+                <img src="{{modal.image}}" alt="Logo" [ngClass]="modal.class">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" [disabled]="page == 1" (click)="previousPage()">Previous</button>

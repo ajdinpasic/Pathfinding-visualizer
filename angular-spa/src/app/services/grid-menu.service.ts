@@ -17,6 +17,13 @@ export class GridMenuService {
   public content2 = "According to the Google, pathfinding is the plotting, by a computer application, of the shortest route between two points, thereat avoiding all obstacles on its path! All of the algorithms on this application are adapted for a 2D grid and movements from a node to another have a 'cost' of 1."
   public image2 = "https://miro.medium.com/max/987/1*gcvqH8fv5CRYtYbkx0JRuQ.png"
   public class2 = "pic2";
+  public header3= "Choosing an action!";
+  public content3 = "Using this dropdown you can toogle between drawing & removing walls, changing the position of starting & ending node";
+  public image3 = "../../assets/actions.JPG";
+  public class3 = "pic3";
+   public header4= "Choosing an algorithm!";
+  public image4 = "../../assets/algos.JPG";
+  public class4 = "pic3";
   @Output() clearBoardEmmiter: EventEmitter<null> = new EventEmitter();
   @Output() generateRandomWallsEmitter: EventEmitter<null> = new EventEmitter();
   @Output() loadSampleMazeEmitter: EventEmitter<any> = new EventEmitter();
@@ -59,19 +66,31 @@ export class GridMenuService {
   }
 
   getModalContext(page: number): any {
-    let final = [];
+    let final:any = {};
     switch(page) {
       case 1:
-        final[0] = this.header1;
-        final[1] = this.content1;
-        final[2] = this.image1;
-        final[3] = this.class1;
+        final.header = this.header1;
+        final.content = this.content1;
+        final.image = this.image1;
+        final.class = this.class1;
         break;
       case 2:
-        final[0] = this.header2;
-        final[1] = this.content2;
-        final[2] = this.image2;
-        final[3] = this.class2;
+        final.header = this.header2;
+        final.content = this.content2;
+        final.image = this.image2;
+        final.class = this.class2;
+        break;
+      case 3:
+        final.header = this.header3;
+        final.content = this.content3;
+        final.image = this.image3;
+        final.class = this.class3;
+        break;
+      case 4:
+        final.header = this.header4;
+        final.hasDetails = true
+        final.image = this.image4;
+        final.class = this.class4;
         break;
     }
     return final;

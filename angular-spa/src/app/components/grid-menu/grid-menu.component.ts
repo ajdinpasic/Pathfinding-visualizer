@@ -12,7 +12,7 @@ export class GridMenuComponent implements OnInit {
   public action : string = "";
   public algo : string = "";
   public menuDisabled: boolean = false;
-  public modal : any = [];
+  public modal : any = {};
   public page: number = 1;
   public speed: string = "";
 
