@@ -1,6 +1,6 @@
 <div class="container-fluid px-0">
     <nav class="navbar navbar-expand-sm navbar-dark bg-info py-0 px-0" style="height:100px;">
-        <a class="navbar-brand" target="_blank" style="font-size:20px;" href="https://github.com/ajdinpasic/Pathfinding-visualizer"><img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/2048px-Angular_full_color_logo.svg.png"> &nbsp;&nbsp;&nbsp;Pathfinding visualizer</a>
+        <a class="navbar-brand" target="_blank" style="font-size:18px;" href="https://github.com/ajdinpasic/Pathfinding-visualizer"><img id="logo" src="https://bengavrilov.github.io/Path-Finding-Visualizer/slide2pic.png"> &nbsp;&nbsp;&nbsp;Pathfinding visualizer</a>
         <span class="v-line"></span>
         <button class="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,19 @@
                 </li>
                 <li class="nav-item active">
                     <div class="dropdown mt-1">
+                        <button type="button" class="btn btn-info dropdown-toggle button-font" data-toggle="dropdown"
+                            [disabled]="menuDisabled">
+                            {{speed}}
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" (click)="updateSpeed(1)">Slow</a>
+                            <a class="dropdown-item" (click)="updateSpeed(2)">Normal</a>
+                            <a class="dropdown-item" (click)="updateSpeed(3)">Fast</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item active">
+                    <div class="dropdown mt-1">
                         <button type="button" class="btn btn-info dropdown-toggle button-font" data-toggle="dropdown" [disabled]="menuDisabled">
                             Bonus items
                         </button>
@@ -48,7 +61,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="nav-item active navs-font bg-success" *ngIf="algo !='Select algorithm'" >
+                <li class="nav-item active navs-font bg-success" (click)="visualize()" *ngIf="algo !='Select algorithm'" >
                     <a class="nav-link" [ngClass]="{'disable-links' : menuDisabled}">Visualize</a>
                 </li>
                 <li class="nav-item active navs-font">

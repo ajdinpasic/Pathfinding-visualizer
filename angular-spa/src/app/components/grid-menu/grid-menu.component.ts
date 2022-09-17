@@ -14,6 +14,7 @@ export class GridMenuComponent implements OnInit {
   public menuDisabled: boolean = false;
   public modal : any = [];
   public page: number = 1;
+  public speed: string = "";
 
   constructor(private GridMenuSvc: GridMenuService, private http: HttpClient) { }
 
@@ -22,6 +23,7 @@ export class GridMenuComponent implements OnInit {
     this.algo = this.GridMenuSvc.getAlgo();
     this.menuDisabled = this.GridMenuSvc.isMenuDisabled();
     this.modal = this.GridMenuSvc.getModalContext(1);
+    this.speed = this.GridMenuSvc.getSpeed();
 
     this.GridMenuSvc.menuChangedEmitter.subscribe(() => {
        this.menuDisabled = this.GridMenuSvc.isMenuDisabled();
@@ -58,7 +60,23 @@ export class GridMenuComponent implements OnInit {
           this.algo = "BFS";
           break;
         }
-    this.GridMenuSvc.setAction(this.algo)
+    this.GridMenuSvc.setAlgo(this.algo)
+  }
+
+  updateSpeed(speed: number): void {
+    switch(speed) {
+      case 1:
+        this.speed = "Slow";
+        break;
+      case 2:
+        this.speed = "Normal";
+        break;
+      case 3:
+        this.speed = "Fast";
+        break;
+    }
+    console.log("speed changed")
+    this.GridMenuSvc.setSpeed(this.speed);
   }
 
   clearBoard() {
@@ -91,6 +109,10 @@ export class GridMenuComponent implements OnInit {
   closeModal() {
     this.page = 1;
     this.modal = this.GridMenuSvc.getModalContext(this.page)
+  }
+
+  visualize() {
+    this.GridMenuSvc.visualizeAlgo(this.GridMenuSvc.getAlgo());
   }
 
 
