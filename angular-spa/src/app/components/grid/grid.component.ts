@@ -8,12 +8,6 @@ import { GridMenuService } from 'src/app/services/grid-menu.service';
 })
 export class GridComponent implements OnInit {
 
-  //menu options
-  // public menuDisabled : boolean = false; 
-  // public drawWalls: boolean = true;
-  // public removeWalls: boolean = false;
-  // public startNodeFree: boolean = false;
-  // public endNodeFree: boolean = false;
   public startNodeColor: string = "#42f56c";
   public endNodeColor: string = "#cc4129";
   public dimension: number = 13;
@@ -24,17 +18,6 @@ export class GridComponent implements OnInit {
   public shape: any[] = new Array(95);
 
   constructor(private GridMenuSvc: GridMenuService) {}
-
-  // private mouseTest() {
-  //   this.canvas.addEventListener('mousemove', this.onMouseTest);
-  // }
-
-  // private onMouseTest : EventListener = (event: any) => {
-  //   const rectangle = this.canvas.getBoundingClientRect();
-  //      let cx = event.clientX - rectangle.left;
-  //      let cy = event.clientY - rectangle.top;
-  //      this.manipulateWall(event, cx, cy)
-  // }
 
   ngOnInit(): void {
     for (let i=0; i<this.shape.length;i++) {
@@ -47,7 +30,6 @@ export class GridComponent implements OnInit {
     this.ctx.canvas.style.imageRendering = 'auto';
     this.ctx.imageSmoothingEnabled = false;
 
-    //TODO: images
     this.resetGrid();
 
     let temp = this;
@@ -98,6 +80,10 @@ export class GridComponent implements OnInit {
     this.loadSampleMaze(data)
   })
 
+  this.GridMenuSvc.visualizeAlgoEmmiter.subscribe((data: string) => {
+    this.visualizeAlgo(data);
+  })
+
   }
 
   resetGrid(): void {
@@ -112,15 +98,14 @@ export class GridComponent implements OnInit {
         let y = j * this.dimension;
         let type = "";
         let visited = false;
-        //TODO: A* info
-        let origin = undefined;
+        let cameFrom = undefined;
         let neighbors = new Array();
+        let F = 100000;
+        let G = 100000;
+        let H = 100000;
         if(i == 4 && j == 4) {
           this.ctx.fillStyle = this.startNodeColor;
           this.ctx.fillRect(x,y,this.dimension,this.dimension);
-          // let tt = new Image();
-          // tt.src = '/assets/location.jpg'
-          // this.ctx.drawImage(tt,x,y,this.dimension,this.dimension)
           type = "Start"
           
         }
@@ -138,7 +123,7 @@ export class GridComponent implements OnInit {
            
         }
        
-         this.shape[i][j] = {x,y,i,j,type,neighbors, origin, visited};
+         this.shape[i][j] = {x, y, i, j, type, F, G, H, neighbors, cameFrom, visited};
         
       }
     } 
@@ -182,7 +167,6 @@ export class GridComponent implements OnInit {
              if (this.GridMenuSvc.getAction() == 'Remove walls' && this.shape[i][j].type == "Wall") {
               this.ctx.lineWidth = this.lineWidth;
               this.ctx.fillStyle = "#FFFFFF";
-              this.ctx.lineWidth = this.lineWidth;
 
               this.shape[i][j].type = "";
 
@@ -312,7 +296,7 @@ export class GridComponent implements OnInit {
       await new Promise<void>(resolve =>
         setTimeout(() => {
           resolve();
-        }, 10)
+        }, this.animationDelay)
       );
     }
   }
@@ -363,10 +347,259 @@ export class GridComponent implements OnInit {
       await new Promise<void>(resolve =>
         setTimeout(() => {
           resolve();
-        }, 10)
+        }, this.animationDelay)
       );
     }
      this.GridMenuSvc.setMenu(false)
   }
 
+  visualizeAlgo(algo: string) {
+      // todo: switch loop with cases for algos
+      this.aStarAlgo();
+  }
+
+ async aStarAlgo() {
+    this.GridMenuSvc.setMenu(true);
+    this.clearPath();
+    let openSet = [];
+    let closedSet = [];
+    let start = null;
+    let end = null;
+    let path = [];
+
+    this.findNeighbors();
+
+     for (let i = 0; i < this.shape.length; i++) {
+      for (let j = 0; j < this.shape[0].length; j++) {
+        if (this.shape[i][j].type == "Start") {
+          start = this.shape[i][j];
+        }
+        if (this.shape[i][j].type == "End") {
+          end = this.shape[i][j];
+        }
+      }
+    }
+
+    openSet.push(start);
+
+    //change here begins
+
+    while (openSet.length > 0) {
+
+      let lowestIndex = 0;
+      //find lowest index
+      for (let i = 0; i < openSet.length; i++) {
+        if (openSet[i].F < openSet[lowestIndex].F)
+          lowestIndex = i;
+        else if (openSet[i].F === openSet[lowestIndex].F) {
+          if (openSet[i].H < openSet[lowestIndex].H) {
+            lowestIndex = i;
+          }
+        }
+      }
+      //current node
+      let current: any = openSet[lowestIndex];
+
+      //if reached the end
+      if (openSet[lowestIndex] === end) {
+
+        path = [];
+        let temp = current;
+        path.push(temp);
+        while (temp.cameFrom) {
+          path.push(temp.cameFrom);
+          temp = temp.cameFrom;
+        }
+        console.log("Done!"); // DONE
+        //draw path
+        for (let i = path.length - 1; i >= 0; i--) {
+          this.ctx.fillStyle = "#ffff00";
+          this.ctx.lineWidth = this.lineWidth;
+          this.drawNode(path[i].x, path[i].y, "#ffff00")
+          await new Promise<void>(resolve =>
+            setTimeout(() => {
+              resolve();
+            }, this.animationDelay) // BACK IT
+          );
+        }
+         this.GridMenuSvc.setMenu(false)
+        break;
+      }
+
+      this.removeFromArray(openSet, current);
+      closedSet.push(current);
+
+      let my_neighbors = current.neighbors;
+      for (let i = 0; i < my_neighbors.length; i++) {
+        var neighbor = my_neighbors[i];
+
+        if (!closedSet.includes(neighbor) && neighbor.type != "Wall") {
+          let tempG = current.G + 1;
+
+          let newPath = false;
+          if (openSet.includes(neighbor)) {
+            if (tempG < neighbor.G) {
+              neighbor.G = tempG;
+              newPath = true;
+            }
+          } else {
+            neighbor.G = tempG;
+            newPath = true;
+            openSet.push(neighbor);
+          }
+
+          if (newPath) {
+            neighbor.H = this.calculateHeuristic(neighbor, end);
+            neighbor.F = neighbor.G + neighbor.H;
+            neighbor.cameFrom = current;
+          }
+
+        }
+      }
+
+
+      //draw
+      this.ctx.lineWidth = this.lineWidth;
+      for (let i = 0; i < closedSet.length; i++) { //BLUE
+        this.ctx.fillStyle = "#4287f5";
+        this.ctx.fillRect(closedSet[i].x + 0.5, closedSet[i].y + 0.5, this.dimension - 1, this.dimension - 1);
+        //this.drawNode(closedSet[i].x, closedSet[i].y, "#4287f5");
+      }
+      for (let i = 0; i < openSet.length; i++) { //GREEN
+        this.ctx.fillStyle = "#00c48d";
+        this.ctx.fillRect(openSet[i].x + 0.5, openSet[i].y + 0.5, this.dimension - 1, this.dimension - 1);
+        //this.drawNode(closedSet[i].x, closedSet[i].y, "#00c48d");
+
+      }
+      await new Promise<void>(resolve =>
+        setTimeout(() => {
+          resolve();
+        }, this.animationDelay) // BACK IT
+      );
+    }
+    if (openSet.length <= 0) {
+      //no solution
+      console.log("no path")
+       this.GridMenuSvc.setMenu(false)
+    }
+
+    //change here ends
+    
+  }
+
+  clearPath() {
+    let wallPositions = [];
+    let startPos;
+    let endPos;
+    //store info
+    for (let i = 0; i < this.shape.length; i++) {
+      for (let j = 0; j < this.shape[0].length; j++) {
+        if (this.shape[i][j].type == "Wall") {
+          let x = this.shape[i][j].x;
+          let y = this.shape[i][j].y;
+          wallPositions.push({ x, y });
+        }
+        if (this.shape[i][j].type == "Start") {
+          startPos = this.shape[i][j];
+        }
+        if (this.shape[i][j].type == "End") {
+          endPos = this.shape[i][j];
+        }
+        this.shape[i][j].visited = false;
+        this.shape[i][j].cameFrom = undefined;
+      }
+    }
+    //clear grid
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    //restore stuff
+    //grid
+    for (let i = 0; i < this.shape.length; i++) {
+      for (let j = 0; j < this.shape[0].length; j++) {
+        this.shape[i][j].F = 0;
+        this.shape[i][j].G = 0;
+        this.shape[i][j].H = 0;
+        this.ctx.strokeRect(this.shape[i][j].x, this.shape[i][j].y, this.dimension, this.dimension);
+      }
+    }
+
+
+    for (let i = 0; i < wallPositions.length; i++) {
+      this.ctx.fillStyle = "#000000"
+      this.ctx.fillRect(wallPositions[i].x + 0.5, wallPositions[i].y + 0.5, this.dimension - 1, this.dimension - 1);
+    }
+    this.ctx.fillStyle = "#FF3600";
+    this.ctx.fillRect(startPos.x, startPos.y, this.dimension - 1, this.dimension - 1);
+    this.ctx.fillStyle = "#00AB5C";
+    this.ctx.fillRect(endPos.x, endPos.y, this.dimension - 1, this.dimension - 1);
+
+  }
+
+  findNeighbors() {
+    for (let i = 0; i < this.shape.length; i++) {
+      for (let j = 0; j < this.shape[0].length; j++) {
+        if (i < this.shape.length - 1) {
+          this.shape[i][j].neighbors.push(this.shape[i + 1][j]);
+        }
+        if (i > 0) {
+          this.shape[i][j].neighbors.push(this.shape[i - 1][j]);
+        }
+        if (j < this.shape[0].length - 1) {
+          this.shape[i][j].neighbors.push(this.shape[i][j + 1]);
+        }
+        if (j > 0) {
+          this.shape[i][j].neighbors.push(this.shape[i][j - 1]);
+        }
+
+      }
+    }
+  }
+
+  async drawNode(xPos:any, yPos:any, color:any) {
+    let x = this.dimension / 2;
+    let y = this.dimension / 2;
+    let dx = 0;
+    let dy = 0;
+
+    for (let k = this.dimension + 1; k > 0; k--) {
+      await new Promise<void>(resolve =>
+        setTimeout(() => {
+          resolve();
+        }, this.animationDelay) //  BACK IT
+      );
+      this.ctx.fillRect(xPos + x, yPos + y, dx, dy);
+
+      x -= 0.5;
+      y -= 0.5;
+      dx += 1;
+      dy += 1;
+
+    }
+  }
+
+  calculateHeuristic(a:any, b:any) {
+    let d = (Math.abs(a.x - b.x) + Math.abs(a.y - b.y));
+    //let d = (Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
+    return d;
+  }
+
+  removeFromArray(arr:any, element:any) {
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (arr[i] == element) {
+        arr.splice(i, 1);
+      }
+    }
+  }
+
 }
+
+ // private mouseTest() {
+  //   this.canvas.addEventListener('mousemove', this.onMouseTest);
+  // }
+
+  // private onMouseTest : EventListener = (event: any) => {
+  //   const rectangle = this.canvas.getBoundingClientRect();
+  //      let cx = event.clientX - rectangle.left;
+  //      let cy = event.clientY - rectangle.top;
+  //      this.manipulateWall(event, cx, cy)
+  // }

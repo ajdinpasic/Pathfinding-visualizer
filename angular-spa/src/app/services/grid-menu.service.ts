@@ -7,6 +7,7 @@ export class GridMenuService {
   @Output() updateActionEmitter: EventEmitter<string> = new EventEmitter();
   public action: string = "Select action";
   public algo : string = "Select algorithm";
+  public speed : string = "Normal";
   public menuDisabled: boolean = false;
   public header1 = "Welcome to Pathfinding Visualizer!"
   public content1 = "This short tutorial will walk you through all of the features of this application.If you want to dive right in, feel free to skip the tutorial. Otherwise, press 'Next'!"
@@ -20,6 +21,7 @@ export class GridMenuService {
   @Output() generateRandomWallsEmitter: EventEmitter<null> = new EventEmitter();
   @Output() loadSampleMazeEmitter: EventEmitter<any> = new EventEmitter();
   @Output() menuChangedEmitter: EventEmitter<null> = new EventEmitter();
+  @Output() visualizeAlgoEmmiter: EventEmitter<string> = new EventEmitter();
 
   constructor() { }
 
@@ -77,6 +79,18 @@ export class GridMenuService {
 
   loadSampleMaze(data: any) {
     this.loadSampleMazeEmitter.emit(data)
+  }
+
+  visualizeAlgo(algo: string) {
+    this.visualizeAlgoEmmiter.emit(algo)
+  }
+
+  getSpeed() {
+    return this.speed;
+  }
+
+  setSpeed(speed: string) {
+    this.speed = speed;
   }
 
 }
