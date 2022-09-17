@@ -358,9 +358,28 @@ export class GridComponent implements OnInit {
       this.aStarAlgo();
   }
 
+  pickSpeed(): number {
+    let temp = this.GridMenuSvc.getSpeed();
+    switch(temp) {
+      case "Slow":
+        console.log("temp1 is:"+temp)
+        return 35;
+      case "Normal":
+        console.log("temp2 is:"+temp)
+        return 15;
+      case "Fast":
+        console.log("temp3 is:"+temp)
+        return 7;
+    }
+    return 10;
+
+  }
+
  async aStarAlgo() {
     this.GridMenuSvc.setMenu(true);
     this.clearPath();
+    // get the speed user chooses
+    let delaySpeed = this.pickSpeed();
     let openSet = [];
     let closedSet = [];
     let start = null;
@@ -415,11 +434,11 @@ export class GridComponent implements OnInit {
         for (let i = path.length - 1; i >= 0; i--) {
           this.ctx.fillStyle = "#ffff00";
           this.ctx.lineWidth = this.lineWidth;
-          this.drawNode(path[i].x, path[i].y, "#ffff00")
+          this.drawNode(path[i].x, path[i].y, "#ffff00", delaySpeed)
           await new Promise<void>(resolve =>
             setTimeout(() => {
               resolve();
-            }, this.animationDelay) // BACK IT
+            }, delaySpeed) // BACK IT
           );
         }
          this.GridMenuSvc.setMenu(false)
@@ -463,18 +482,18 @@ export class GridComponent implements OnInit {
       for (let i = 0; i < closedSet.length; i++) { //BLUE
         this.ctx.fillStyle = "#4287f5";
         this.ctx.fillRect(closedSet[i].x + 0.5, closedSet[i].y + 0.5, this.dimension - 1, this.dimension - 1);
-        //this.drawNode(closedSet[i].x, closedSet[i].y, "#4287f5");
+        //this.drawNode(closedSet[i].x, closedSet[i].y, "#4287f5", delaySpeed);
       }
       for (let i = 0; i < openSet.length; i++) { //GREEN
         this.ctx.fillStyle = "#00c48d";
         this.ctx.fillRect(openSet[i].x + 0.5, openSet[i].y + 0.5, this.dimension - 1, this.dimension - 1);
-        //this.drawNode(closedSet[i].x, closedSet[i].y, "#00c48d");
+        //this.drawNode(closedSet[i].x, closedSet[i].y, "#00c48d", delaySpeed);
 
       }
       await new Promise<void>(resolve =>
         setTimeout(() => {
           resolve();
-        }, this.animationDelay) // BACK IT
+        }, delaySpeed) // BACK IT
       );
     }
     if (openSet.length <= 0) {
@@ -555,7 +574,7 @@ export class GridComponent implements OnInit {
     }
   }
 
-  async drawNode(xPos:any, yPos:any, color:any) {
+  async drawNode(xPos:any, yPos:any, color:any, delaySpeed: number) {
     let x = this.dimension / 2;
     let y = this.dimension / 2;
     let dx = 0;
@@ -565,7 +584,7 @@ export class GridComponent implements OnInit {
       await new Promise<void>(resolve =>
         setTimeout(() => {
           resolve();
-        }, this.animationDelay) //  BACK IT
+        }, delaySpeed) //  BACK IT
       );
       this.ctx.fillRect(xPos + x, yPos + y, dx, dy);
 
