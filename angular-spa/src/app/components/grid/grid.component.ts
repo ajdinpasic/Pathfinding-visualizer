@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Chain } from 'src/app/models/Chain';
 import { GridMenuService } from 'src/app/services/grid-menu.service';
 
 @Component({
@@ -355,7 +356,17 @@ export class GridComponent implements OnInit {
 
   visualizeAlgo(algo: string) {
       // todo: switch loop with cases for algos
-      this.aStarAlgo();
+      console.log("my algo: "+algo)
+      switch(algo) {
+        case "A*":
+          this.aStarAlgo();
+          break;
+        case "Dijkstra":
+          this.dijkstraAlgo();
+          break;
+        case "BFS":
+          this.bfsAlgo();
+      }
   }
 
   pickSpeed(): number {
@@ -504,6 +515,221 @@ export class GridComponent implements OnInit {
 
     //change here ends
     
+  }
+
+  async dijkstraAlgo() {
+
+    this.clearPath();
+    this.GridMenuSvc.setMenu(true)
+    // get the speed user chooses
+    let delaySpeed = this.pickSpeed();
+    let openSet = [];
+    let closedSet = [];
+    let start, end;
+    let path = [];
+
+
+    this.findNeighbors();
+
+
+    //shapes is a 2d array of squares... a grid
+    for (let i = 0; i < this.shape.length; i++) {
+      for (let j = 0; j < this.shape[0].length; j++) {
+        if (this.shape[i][j].type == "Start") {
+          start = this.shape[i][j];
+        }
+        if (this.shape[i][j].type == "End") {
+          end = this.shape[i][j];
+        }
+      }
+    }
+
+    openSet.push(start);
+
+
+    while (openSet.length > 0) {
+
+      let lowestIndex = 0;
+      //find lowest index
+      for (let i = 0; i < openSet.length; i++) {
+        if (openSet[i].F < openSet[lowestIndex].F)
+          lowestIndex = i;
+      }
+      //current node
+      let current:any = openSet[lowestIndex];
+
+      //if reached the end
+      if (openSet[lowestIndex] === end) {
+
+        path = [];
+        let temp = current;
+        path.push(temp);
+        while (temp.cameFrom) {
+          path.push(temp.cameFrom);
+          temp = temp.cameFrom;
+        }
+        console.log("Done!");
+        //draw path
+        for (let i = path.length - 1; i >= 0; i--) {
+          this.ctx.fillStyle = "#ffff00";
+          this.ctx.lineWidth = this.lineWidth;
+          this.drawNode(path[i].x, path[i].y, "#ffff00",delaySpeed)
+          await new Promise<void>(resolve =>
+            setTimeout(() => {
+              resolve();
+            }, delaySpeed)
+          );
+        }
+        this.GridMenuSvc.setMenu(false)
+        break;
+      }
+
+      this.removeFromArray(openSet, current);
+      closedSet.push(current);
+
+      let my_neighbors = current.neighbors;
+      for (let i = 0; i < my_neighbors.length; i++) {
+        var neighbor = my_neighbors[i];
+
+        if (!closedSet.includes(neighbor) && neighbor.type != "Wall") {
+          let tempG = current.G + 1;
+
+          let newPath = false;
+          if (openSet.includes(neighbor)) {
+            if (tempG < neighbor.G) {
+              neighbor.G = tempG;
+              newPath = true;
+            }
+          } else {
+            neighbor.G = tempG;
+            newPath = true;
+            openSet.push(neighbor);
+          }
+
+          if (newPath) {
+            neighbor.H = this.calculateHeuristic(neighbor, end);
+            neighbor.G = neighbor.F + neighbor.H;
+            neighbor.cameFrom = current;
+          }
+
+        }
+      }
+
+
+      //draw
+      this.ctx.lineWidth = this.lineWidth;
+      for (let i = 0; i < closedSet.length; i++) { //BLUE
+        this.ctx.fillStyle = "#4287f5";
+        this.ctx.fillRect(closedSet[i].x + 0.5, closedSet[i].y + 0.5, this.dimension - 1, this.dimension - 1);
+      }
+      for (let i = 0; i < openSet.length; i++) { //GREEN
+        this.ctx.fillStyle = "#00c48d";
+        this.ctx.fillRect(openSet[i].x + 0.5, openSet[i].y + 0.5, this.dimension - 1, this.dimension - 1);
+
+      }
+      await new Promise<void>(resolve =>
+        setTimeout(() => {
+          resolve();
+        }, delaySpeed)
+      );
+    }
+    if (openSet.length <= 0) {
+      //no solution
+      this.GridMenuSvc.setMenu(false)
+    }
+
+  }
+
+async bfsAlgo() {
+    this.clearPath();
+    let delaySpeed = this.pickSpeed();
+    this.GridMenuSvc.setMenu(true)
+
+    let start;
+    let end;
+    for (let i = 0; i < this.shape.length; i++) {
+      for (let j = 0; j < this.shape[0].length; j++) {
+        if (this.shape[i][j].type == "Start") {
+          start = this.shape[i][j];
+        }
+        if (this.shape[i][j].type == "End") {
+          end = this.shape[i][j];
+        }
+      }
+    }
+    console.log("end")
+    console.log(end.i + " " + end.j);
+
+    let queue = new Chain();
+    queue.addElementToChain(start);
+
+    while (!queue.isChainEmpty()) {
+      let node = queue.removeElementFromChain();
+
+      if (node == end) {
+        let current = end;
+        let path = new Array();
+        while (current != start) {
+          current = current.cameFrom;
+          path.push(current);
+        }
+        for (let i = path.length - 1; i >= 0; i--) {
+          this.ctx.fillStyle = "#ffff00";
+          this.ctx.lineWidth = this.lineWidth;
+          this.drawNode(path[i].x, path[i].y, "#ffff00",delaySpeed)
+          await new Promise<void>(resolve =>
+            setTimeout(() => {
+              resolve();
+            }, delaySpeed)
+          );
+        }
+        this.GridMenuSvc.setMenu(false)
+        break;
+      }
+
+      let neighbors = this.returnNeighbors(node);
+
+      for (let i = 0; i < neighbors.length; i++) {
+        if (!neighbors[i].visited && neighbors[i].type != "Wall") {
+          neighbors[i].visited = true;
+          neighbors[i].cameFrom = node;
+          queue.addElementToChain(neighbors[i]);
+          this.ctx.fillStyle = "#4287f5";
+          this.ctx.fillRect(neighbors[i].x + 0.5, neighbors[i].y + 0.5, this.dimension - 1, this.dimension - 1);
+        }
+      }
+      await new Promise<void>(resolve =>
+        setTimeout(() => {
+          resolve();
+        }, delaySpeed)
+      );
+    }
+
+
+
+
+
+  }
+
+  returnNeighbors(node:any) {
+
+    // depending on the node position, add it as a neighbor
+    let neighbors = [];
+    if (node.i > 0) {
+      neighbors.push(this.shape[node.i - 1][node.j]);
+    }
+    if (node.i < this.shape.length - 1) [
+      neighbors.push(this.shape[node.i + 1][node.j])
+    ]
+    if (node.j > 0) {
+      neighbors.push(this.shape[node.i][node.j - 1]);
+    }
+    if (node.j < this.shape[0].length - 1) {
+      neighbors.push(this.shape[node.i][node.j + 1]);
+    }
+    // this.ctx.fillStyle = "#00c48d";
+    //       this.ctx.fillRect(neighbors[node.i].x + 0.5, neighbors[node.i].y + 0.5, this.dimension - 1, this.dimension - 1);
+    return neighbors;
   }
 
   clearPath() {
