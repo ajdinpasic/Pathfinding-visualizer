@@ -126,16 +126,20 @@ width: 200px;
 .tutorial-nodes {
     display: inline-block;
     list-style: none;
-    padding: 0 28px 0 0;
-    margin: 0 10px;
+    /* padding: 0 28px 0 0; */
+    margin: 5px 10px;
+}
+
+#mainText {
+    font-size: 12px;
 }
 
 .start {
-    width: 20px;
-    height: 20px;
+    width: 10px;
+    height: 10px;
     display: inline-block;
     position: relative;
-    top: 0.35em;
+    /* top: 0.35em; */
     margin: 0 0.42em;
     border: 0.1px solid black;
     background-color: rgb(66, 245, 108);
@@ -150,11 +154,11 @@ width: 200px;
 }
 
 .end {
-    width: 20px;
-    height: 20px;
+    width: 10px;
+        height: 10px;
     display: inline-block;
     position: relative;
-    top: 0.35em;
+    /* top: 0.35em; */
     margin: 0 0.42em;
     border: 0.1px solid black;
     background-color: rgb(204, 65, 41);
@@ -178,11 +182,11 @@ width: 200px;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
     animation-play-state: running;
-    width: 20px;
-    height: 20px;
+    width: 10px;
+        height: 10px;
     display: inline-block;
     position: relative;
-    top: 0.35em;
+    /* top: 0.35em; */
     margin: 0 0.42em;
     border: 0.1px solid black;
 }
@@ -197,11 +201,11 @@ width: 200px;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
     animation-play-state: running;
-    width: 20px;
-    height: 20px;
+    width: 10px;
+        height: 10px;
     display: inline-block;
     position: relative;
-    top: 0.35em;
+    /* top: 0.35em; */
     margin: 0 0.42em;
     border: 0.1px solid black;
 }
@@ -216,11 +220,11 @@ width: 200px;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
     animation-play-state: running;
-    width: 20px;
-    height: 20px;
+width: 10px;
+    height: 10px;
     display: inline-block;
     position: relative;
-    top: 0.35em;
+    /* top: 0.35em; */
     margin: 0 0.42em;
     border: 0.1px solid black;
 }
@@ -235,11 +239,11 @@ width: 200px;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
     animation-play-state: running;
-    width: 20px;
-    height: 20px;
+    width: 10px;
+        height: 10px;
     display: inline-block;
     position: relative;
-    top: 0.35em;
+    /* top: 0.35em; */
     margin: 0 0.42em;
     border: 0.1px solid black;
 }
@@ -254,11 +258,11 @@ width: 200px;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
     animation-play-state: running;
-    width: 20px;
-    height: 20px;
+    width: 10px;
+        height: 10px;
     display: inline-block;
     position: relative;
-    top: 0.35em;
+    /* top: 0.35em; */
     margin: 0 0.42em;
     border: 0.1px solid black;
 }
