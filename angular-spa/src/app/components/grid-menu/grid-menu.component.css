@@ -128,11 +128,12 @@ width: 200px;
     list-style: none;
     /* padding: 0 28px 0 0; */
     margin: 5px 10px;
+    font-size: 18px;
 }
 
-#mainText {
+/* #mainText {
     font-size: 14px;
-}
+} */
 
 .start {
     width: 10px;
