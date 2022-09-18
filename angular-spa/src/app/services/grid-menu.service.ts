@@ -23,7 +23,16 @@ export class GridMenuService {
   public class3 = "pic3";
    public header4= "Choosing an algorithm!";
   public image4 = "../../assets/algos.JPG";
-  public class4 = "pic3";
+  public class4 = "pic4";
+  public header5 = "Visualizing and more";
+  public content5 = `You can clear the entire board, and adjust the visualization speed, all from the navbar.You can see how well you algorithm performed and play around with sample or random mazes. If you want to access this tutorial again, click on "Tutorial" option on the menu bar.`;
+  public image5 = "../../assets/more.JPG"
+  public class5 = "pic5";
+  public image55 = "../../assets/moree.JPG"
+  public header6 = "Enjoy!";
+  public content6 = "I hope you have just as much fun playing around with this visualization tool as I had building it!"
+  public image6 = "https://e7.pngegg.com/pngimages/298/636/png-clipart-computer-keyboard-typing-typing-s-furniture-hand.png";
+  public class6 = "pic6";
   @Output() clearBoardEmmiter: EventEmitter<null> = new EventEmitter();
   @Output() generateRandomWallsEmitter: EventEmitter<null> = new EventEmitter();
   @Output() loadSampleMazeEmitter: EventEmitter<any> = new EventEmitter();
@@ -91,6 +100,20 @@ export class GridMenuService {
         final.hasDetails = true
         final.image = this.image4;
         final.class = this.class4;
+        break;
+      case 5:
+        final.header = this.header5;
+        final.content = this.content5;
+        final.image = this.image5;
+        final.imagee = this.image55
+        final.class = this.class5
+        final.twoPics = true;
+        break;
+      case 6:
+        final.header = this.header6;
+        final.content = this.content6;
+        final.image = this.image6;
+        final.class = this.class6;
         break;
     }
     return final;
