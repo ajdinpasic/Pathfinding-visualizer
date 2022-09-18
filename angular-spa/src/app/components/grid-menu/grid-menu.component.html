@@ -86,6 +86,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel" style="width:500px;text-align: center;">{{modal.header}}</h3>
+                <!-- <div class="tutorialCounter">{{page}}/6</div> -->
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -104,7 +105,6 @@
                 <img *ngIf="modal.image" src="{{modal.image}}" alt="Logo" [ngClass]="modal.class">
                 <img *ngIf="modal.twoPics" src="{{modal.imagee}}" alt="Logo" [ngClass]="modal.class">
             </div>
-            <div class="tutorialCounter" style="display: static;">{{page}}/6</div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" [disabled]="page == 1" (click)="previousPage()">Previous</button>
                 <button type="button" class="btn btn-success" [disabled]="page == 6" (click)="nextPage()">Next</button>
