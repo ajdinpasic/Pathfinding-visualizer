@@ -103,7 +103,6 @@
                 </ul>
                 <br>
                 <img *ngIf="modal.image" src="{{modal.image}}" alt="Logo" [ngClass]="modal.class">
-                <img *ngIf="modal.twoPics" src="{{modal.imagee}}" alt="Logo" [ngClass]="modal.class">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" [disabled]="page == 1" (click)="previousPage()">Previous</button>
