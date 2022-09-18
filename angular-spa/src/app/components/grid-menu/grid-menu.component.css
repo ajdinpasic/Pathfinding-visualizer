@@ -116,6 +116,13 @@ width: 200px;
     margin-top: 30px;
 }
 
+.tutorialCounter {
+    position: absolute;
+    right: 2%;
+    top: 8%;
+    font-size: 18px;
+}
+
 @media (max-width: 576px) {
     .nav-item {
         width: 100%;
