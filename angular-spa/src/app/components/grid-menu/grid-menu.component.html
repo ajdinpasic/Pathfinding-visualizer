@@ -102,9 +102,9 @@
                 </ul>
                 <br>
                 <img *ngIf="modal.image" src="{{modal.image}}" alt="Logo" [ngClass]="modal.class">
-                <img *ngIf="modal.twoPics" src="{{modal.imagee}}" alt="Logo" style="margin-top: 5px;width:300px;height:150px;" [ngClass]="modal.class">
+                <img *ngIf="modal.twoPics" src="{{modal.imagee}}" alt="Logo" [ngClass]="modal.class">
             </div>
-            <div class="tutorialCounter">{{page}}/6</div>
+            <div class="tutorialCounter" style="display: static;">{{page}}/6</div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" [disabled]="page == 1" (click)="previousPage()">Previous</button>
                 <button type="button" class="btn btn-success" [disabled]="page == 6" (click)="nextPage()">Next</button>
