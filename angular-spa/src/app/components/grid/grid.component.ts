@@ -17,6 +17,8 @@ export class GridComponent implements OnInit {
   public canvas: any;
   public ctx: any;
   public shape: any[] = new Array(95);
+  public startImg: any = new Image();
+  public endImg: any = new Image();
 
   constructor(private GridMenuSvc: GridMenuService) {}
 
@@ -31,6 +33,10 @@ export class GridComponent implements OnInit {
     this.ctx.canvas.style.imageRendering = 'auto';
     this.ctx.imageSmoothingEnabled = false;
 
+    this.startImg.onload = () => {console.log("start img loaded")}
+    this.endImg.onload = () => {console.log("end img loaded22")}
+    this.startImg.src = "../../../assets/place.svg"
+    this.endImg.src = "../../../assets/flag.svg"
     this.resetGrid();
 
     let temp = this;
@@ -38,10 +44,6 @@ export class GridComponent implements OnInit {
       const rectangle = temp.canvas.getBoundingClientRect();
       let cx = event.clientX - rectangle.left;
       let cy = event.clientY - rectangle.top;
-      // console.log("event:"+JSON.stringify(event))
-      // console.log("rect:"+JSON.stringify(rectangle))
-      // console.log("eventx:"+event.clientX)
-      // console.log("eventy:"+event.clientY)
       temp.manipulateWall(event, cx, cy)
     }.bind(temp))
 
@@ -49,25 +51,17 @@ export class GridComponent implements OnInit {
       const rectangle = temp.canvas.getBoundingClientRect();
       let cx = event.clientX - rectangle.left;
       let cy = event.clientY - rectangle.top;
-      // console.log("event:"+JSON.stringify(event))
-      // console.log("rect:"+JSON.stringify(rectangle))
-      // console.log("eventx:"+event.clientX)
-      // console.log("eventy:"+event.clientY)
 
       if(temp.GridMenuSvc.getAction() == 'Change start node') {
-        console.log(11)
-      temp.changeStart(cx, cy)
+          temp.changeStart(cx, cy)
       }
       else if(temp.GridMenuSvc.getAction() == 'Change end node') {
-              console.log(2)
          temp.changeEnd(cx,cy)
       }
       
-    })
-
+    }.bind(temp))
 
     //event emitters subscription
-
   this.GridMenuSvc.clearBoardEmmiter.subscribe(() => {
     this.resetGrid();
     console.log("Board cleared")
@@ -88,7 +82,6 @@ export class GridComponent implements OnInit {
   }
 
   resetGrid(): void {
-    
     this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
     this.ctx.lineWidth = this.lineWidth;
     this.ctx.fillStyle = "000000";
@@ -125,7 +118,6 @@ export class GridComponent implements OnInit {
         }
        
          this.shape[i][j] = {x, y, i, j, type, F, G, H, neighbors, cameFrom, visited};
-        
       }
     } 
    
@@ -443,9 +435,22 @@ export class GridComponent implements OnInit {
         console.log("Done!"); // DONE
         //draw path
         for (let i = path.length - 1; i >= 0; i--) {
-          this.ctx.fillStyle = "#ffff00";
+          let isImg = false;
+          let resultColor = "";
+          if(path[i].type == "Start") {
+            resultColor = this.startImg;
+            isImg = true;
+          } 
+          else if(path[i].type == "End") {
+            resultColor = this.endImg;
+            isImg = true;
+          }
+          else {
+            resultColor= "#ffff00"
+          }
           this.ctx.lineWidth = this.lineWidth;
-          this.drawNode(path[i].x, path[i].y, "#ffff00", delaySpeed)
+          // this.ctx.fillStyle = resultColor;
+          this.drawNode(path[i].x, path[i].y, resultColor, delaySpeed, isImg)
           await new Promise<void>(resolve =>
             setTimeout(() => {
               resolve();
@@ -571,9 +576,22 @@ export class GridComponent implements OnInit {
         console.log("Done!");
         //draw path
         for (let i = path.length - 1; i >= 0; i--) {
-          this.ctx.fillStyle = "#ffff00";
+          // this.ctx.fillStyle = "#ffff00";
+           let isImg = false;
+          let resultColor = "";
+          if(path[i].type == "Start") {
+            resultColor = this.startImg;
+            isImg = true;
+          } 
+          else if(path[i].type == "End") {
+            resultColor = this.endImg;
+            isImg = true;
+          }
+          else {
+            resultColor= "#ffff00"
+          }
           this.ctx.lineWidth = this.lineWidth;
-          this.drawNode(path[i].x, path[i].y, "#ffff00",delaySpeed)
+          this.drawNode(path[i].x, path[i].y, resultColor,delaySpeed, isImg)
           await new Promise<void>(resolve =>
             setTimeout(() => {
               resolve();
@@ -642,6 +660,7 @@ export class GridComponent implements OnInit {
 
 async bfsAlgo() {
     this.clearPath();
+    let successFound = false;
     let delaySpeed = this.pickSpeed();
     this.GridMenuSvc.setMenu(true)
 
@@ -667,28 +686,44 @@ async bfsAlgo() {
       let node = queue.removeElementFromChain();
 
       if (node == end) {
+        console.log("found final node")
+        successFound = true;
         let current = end;
         let path = new Array();
         while (current != start) {
           current = current.cameFrom;
           path.push(current);
         }
+        this.drawNode(end.x, end.y, this.endImg, delaySpeed,true)
         for (let i = path.length - 1; i >= 0; i--) {
-          this.ctx.fillStyle = "#ffff00";
+          // this.ctx.fillStyle = "#ffff00";
+           let isImg = false;
+          let resultColor = "";
+          if(path[i].type == "Start") {
+            resultColor = this.startImg;
+            isImg = true;
+          } 
+          // else if(path[i].type == "End") {
+          //   resultColor = this.endImg;
+          //   isImg = true;
+          // }
+          else {
+            resultColor= "#ffff00"
+          }
           this.ctx.lineWidth = this.lineWidth;
-          this.drawNode(path[i].x, path[i].y, "#ffff00",delaySpeed)
+          this.drawNode(path[i].x, path[i].y, resultColor, delaySpeed, isImg)
           await new Promise<void>(resolve =>
             setTimeout(() => {
               resolve();
             }, delaySpeed)
           );
         }
+        console.log("bfs done")
         this.GridMenuSvc.setMenu(false)
         break;
       }
-
+      
       let neighbors = this.returnNeighbors(node);
-
       for (let i = 0; i < neighbors.length; i++) {
         if (!neighbors[i].visited && neighbors[i].type != "Wall") {
           neighbors[i].visited = true;
@@ -705,7 +740,12 @@ async bfsAlgo() {
       );
     }
 
-
+if(successFound) {
+  // TODO: taostr msg
+} else {
+  // TODO: taostr msg
+  this.GridMenuSvc.setMenu(false)
+}
 
 
 
@@ -775,7 +815,8 @@ async bfsAlgo() {
     }
     this.ctx.fillStyle = "#FF3600";
     this.ctx.fillRect(startPos.x, startPos.y, this.dimension - 1, this.dimension - 1);
-    this.ctx.fillStyle = "#00AB5C";
+    // this.ctx.fillStyle = "#00AB5C";
+    this.ctx.fillStyle = "#CC4141";
     this.ctx.fillRect(endPos.x, endPos.y, this.dimension - 1, this.dimension - 1);
 
   }
@@ -800,7 +841,7 @@ async bfsAlgo() {
     }
   }
 
-  async drawNode(xPos:any, yPos:any, color:any, delaySpeed: number) {
+  async drawNode(xPos:any, yPos:any, color:any, delaySpeed: number, isImg: boolean) {
     let x = this.dimension / 2;
     let y = this.dimension / 2;
     let dx = 0;
@@ -812,7 +853,13 @@ async bfsAlgo() {
           resolve();
         }, delaySpeed) //  BACK IT
       );
+      if(!isImg) {
+      this.ctx.fillStyle = color;
       this.ctx.fillRect(xPos + x, yPos + y, dx, dy);
+      }
+      else {
+        this.ctx.drawImage(color, xPos + x, yPos + y, dx, dy)
+      }
 
       x -= 0.5;
       y -= 0.5;
