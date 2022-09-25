@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { GridMenuComponent } from './components/grid-menu/grid-menu.component';
 import { GridComponent } from './components/grid/grid.component';
 import { GridMenuService } from './services/grid-menu.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -15,7 +17,12 @@ import { GridMenuService } from './services/grid-menu.service';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot({
+      timeOut:1500,
+      positionClass:'toast-top-left'
+    }),
   ],
   providers: [GridMenuService],
   bootstrap: [AppComponent]
