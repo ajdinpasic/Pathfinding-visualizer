@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Chain } from 'src/app/models/Chain';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 import { GridMenuService } from 'src/app/services/grid-menu.service';
 
 @Component({
@@ -21,7 +22,7 @@ export class GridComponent implements OnInit {
   public startImg: any = new Image();
   public endImg: any = new Image();
 
-  constructor(private GridMenuSvc: GridMenuService, private toastr: ToastrService) {}
+  constructor(private GridMenuSvc: GridMenuService, private toastr: ToastrService, private analyticsSvc: AnalyticsService) {}
 
   ngOnInit(): void {
     for (let i=0; i<this.shape.length;i++) {
@@ -380,6 +381,8 @@ export class GridComponent implements OnInit {
   }
 
  async aStarAlgo() {
+  this.analyticsSvc.setRunning(true)
+  this.analyticsSvc.startTimer("A* search",this.GridMenuSvc.getSpeed())
     this.GridMenuSvc.setMenu(true);
     this.clearPath();
     // get the speed user chooses
@@ -434,6 +437,8 @@ export class GridComponent implements OnInit {
           temp = temp.cameFrom;
         }
         this.toastr.success("Shortest path found!","Done!")
+        this.analyticsSvc.setRunning(false)
+        this.analyticsSvc.setBell(true)
         console.log("Done!"); // DONE
         //draw path
         for (let i = path.length - 1; i >= 0; i--) {
@@ -518,6 +523,8 @@ export class GridComponent implements OnInit {
       //no solution
       console.log("no path")
       this.toastr.error("Shortest path not found!","Done!")
+      this.analyticsSvc.setRunning(false)
+      this.analyticsSvc.setBell(true)
        this.GridMenuSvc.setMenu(false)
     }
 
@@ -526,7 +533,8 @@ export class GridComponent implements OnInit {
   }
 
   async dijkstraAlgo() {
-
+    this.analyticsSvc.setRunning(true)
+    this.analyticsSvc.startTimer("Dijkstra algorithm",this.GridMenuSvc.getSpeed())
     this.clearPath();
     this.GridMenuSvc.setMenu(true)
     // get the speed user chooses
@@ -577,6 +585,8 @@ export class GridComponent implements OnInit {
           temp = temp.cameFrom;
         }
         this.toastr.success("Shortest path found!","Done!")
+        this.analyticsSvc.setRunning(false)
+        this.analyticsSvc.setBell(true)
         console.log("Done!");
         //draw path
         for (let i = path.length - 1; i >= 0; i--) {
@@ -658,12 +668,16 @@ export class GridComponent implements OnInit {
     if (openSet.length <= 0) {
       //no solution
       this.toastr.error("Shortest path not found!","Done!")
+      this.analyticsSvc.setRunning(false)
+      this.analyticsSvc.setBell(true)
       this.GridMenuSvc.setMenu(false)
     }
 
   }
 
 async bfsAlgo() {
+  this.analyticsSvc.setRunning(true)
+   this.analyticsSvc.startTimer("Breadth-first search",this.GridMenuSvc.getSpeed())
     this.clearPath();
     let successFound = false;
     let delaySpeed = this.pickSpeed();
@@ -747,8 +761,12 @@ async bfsAlgo() {
 
 if(successFound) {
   this.toastr.success("Shortest path found!","Done!")
+  this.analyticsSvc.setRunning(false)
+  this.analyticsSvc.setBell(true)
 } else {
   this.toastr.error("Shortest path not found!","Done!")
+  this.analyticsSvc.setRunning(false)
+  this.analyticsSvc.setBell(true)
   this.GridMenuSvc.setMenu(false)
 }
 

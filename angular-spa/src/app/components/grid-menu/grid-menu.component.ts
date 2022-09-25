@@ -17,6 +17,7 @@ export class GridMenuComponent implements OnInit {
   public page: number = 1;
   public speed: string = "";
   public analyticsData: any[] = [];
+  public showBell: boolean = false;
 
   constructor(private GridMenuSvc: GridMenuService, private http: HttpClient, private AnalyticsSvc: AnalyticsService) { }
 
@@ -27,6 +28,7 @@ export class GridMenuComponent implements OnInit {
     this.modal = this.GridMenuSvc.getModalContext(1);
     this.speed = this.GridMenuSvc.getSpeed();
     this.analyticsData = this.AnalyticsSvc.getContent();
+    this.showBell = this.AnalyticsSvc.getBell();
 
     this.GridMenuSvc.menuChangedEmitter.subscribe(() => {
        this.menuDisabled = this.GridMenuSvc.isMenuDisabled();
@@ -34,6 +36,10 @@ export class GridMenuComponent implements OnInit {
 
     this.AnalyticsSvc.deleteAnalyticsEmitter.subscribe(() => {
       this.analyticsData = this.AnalyticsSvc.getContent();
+    })
+
+    this.AnalyticsSvc.updateBell.subscribe((value:any)=> {
+      this.showBell = value;
     })
   }
 
@@ -126,5 +132,9 @@ export class GridMenuComponent implements OnInit {
     this.AnalyticsSvc.deleteAnalytics();
   }
 
+  hideBell() {
+    this.showBell = false;
+    this.AnalyticsSvc.setBell(false)
+  }
 
 }

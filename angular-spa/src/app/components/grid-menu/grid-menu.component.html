@@ -67,10 +67,11 @@
                 <li class="nav-item active navs-font">
                     <a class="nav-link" [ngClass]="{'disable-links' : menuDisabled}" (click)="clearBoard()">Clear board</a>
                 </li>
-                <li class="nav-item active navs-font" data-toggle="modal" data-target="#analyticsModal">
-                    <a class="nav-link" [ngClass]="{'disable-links' : menuDisabled}">Analytics</a>
+                <li [ngClass]="{'disable-links' : menuDisabled}" class="nav-item active navs-font" data-toggle="modal" data-target="#analyticsModal">
+                    <a class="nav-link" (click)="hideBell()" [ngClass]="{'disable-links' : menuDisabled}">Analytics</a>
                 </li>
-                <li class="nav-item active navs-font"  data-toggle="modal" data-target="#tutorialModal">
+                <i class="fa fa-bell faa-ring animated fa-5x'" *ngIf="showBell"></i>
+                <li [ngClass]="{'disable-links' : menuDisabled}" class="nav-item active navs-font"  data-toggle="modal" data-target="#tutorialModal">
                     <a class="nav-link"[ngClass]="{'disable-links' : menuDisabled}">Tutorial</a>
                 </li>
             </ul>
@@ -127,9 +128,15 @@
             </div>
             <div class="modal-body">
                 <p>Here you can see the time your algorithm perform! Run each algorithm at a time and come back here to see the results!</p>
-                <ul *ngIf="analyticsData.length > 0">
-                    {{analyticsData}}
+                <ng-container *ngIf="analyticsData.length > 0">
+                <ul *ngFor="let item of analyticsData">
+                    <li> Algorithm name:
+                        {{item.Algorithm}} </li>
+                        <li> Execution speed: {{item.Speed}} </li>
+                        <li> Total time: {{item.Time}} </li>
+                    
                 </ul>
+                </ng-container>
                 <ul *ngIf="analyticsData.length == 0" style="color: red;">
                     No data available!
                 </ul>
