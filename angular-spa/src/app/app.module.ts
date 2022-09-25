@@ -8,6 +8,7 @@ import { GridComponent } from './components/grid/grid.component';
 import { GridMenuService } from './services/grid-menu.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { AnalyticsService } from './services/analytics.service';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import { ToastrModule } from 'ngx-toastr';
       positionClass:'toast-top-left'
     }),
   ],
-  providers: [GridMenuService],
+  providers: [GridMenuService, AnalyticsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

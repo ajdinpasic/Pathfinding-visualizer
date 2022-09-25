@@ -67,7 +67,7 @@
                 <li class="nav-item active navs-font">
                     <a class="nav-link" [ngClass]="{'disable-links' : menuDisabled}" (click)="clearBoard()">Clear board</a>
                 </li>
-                <li class="nav-item active navs-font">
+                <li class="nav-item active navs-font" data-toggle="modal" data-target="#analyticsModal">
                     <a class="nav-link" [ngClass]="{'disable-links' : menuDisabled}">Analytics</a>
                 </li>
                 <li class="nav-item active navs-font"  data-toggle="modal" data-target="#tutorialModal">
@@ -111,6 +111,37 @@
         </div>
     </div>
 </div>
+
+<!--analytics modal-->
+<div class="modal fade" id="analyticsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog tutorial" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel" style="width:500px;text-align: center;">Welcome to the analytics!
+                </h3>
+                <!-- <div class="tutorialCounter">{{page}}/6</div> -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Here you can see the time your algorithm perform! Run each algorithm at a time and come back here to see the results!</p>
+                <ul *ngIf="analyticsData.length > 0">
+                    {{analyticsData}}
+                </ul>
+                <ul *ngIf="analyticsData.length == 0" style="color: red;">
+                    No data available!
+                </ul>
+                <br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" (click)="deleteAnalytics()" data-dismiss="modal">Reset</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="mainText" style="position: absolute; left: 15%;">
     <ul>
         <li class="tutorial-nodes">

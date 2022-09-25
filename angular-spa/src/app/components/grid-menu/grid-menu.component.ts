@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GridMenuService } from 'src/app/services/grid-menu.service';
 import { HttpClient } from '@angular/common/http';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-grid-menu',
@@ -15,8 +16,9 @@ export class GridMenuComponent implements OnInit {
   public modal : any = {};
   public page: number = 1;
   public speed: string = "";
+  public analyticsData: any[] = [];
 
-  constructor(private GridMenuSvc: GridMenuService, private http: HttpClient) { }
+  constructor(private GridMenuSvc: GridMenuService, private http: HttpClient, private AnalyticsSvc: AnalyticsService) { }
 
   ngOnInit(): void {
     this.action = this.GridMenuSvc.getAction();
@@ -24,10 +26,15 @@ export class GridMenuComponent implements OnInit {
     this.menuDisabled = this.GridMenuSvc.isMenuDisabled();
     this.modal = this.GridMenuSvc.getModalContext(1);
     this.speed = this.GridMenuSvc.getSpeed();
+    this.analyticsData = this.AnalyticsSvc.getContent();
 
     this.GridMenuSvc.menuChangedEmitter.subscribe(() => {
        this.menuDisabled = this.GridMenuSvc.isMenuDisabled();
     });
+
+    this.AnalyticsSvc.deleteAnalyticsEmitter.subscribe(() => {
+      this.analyticsData = this.AnalyticsSvc.getContent();
+    })
   }
 
   updateAction(type: number): void {
@@ -113,6 +120,10 @@ export class GridMenuComponent implements OnInit {
 
   visualize() {
     this.GridMenuSvc.visualizeAlgo(this.GridMenuSvc.getAlgo());
+  }
+
+  deleteAnalytics() {
+    this.AnalyticsSvc.deleteAnalytics();
   }
 
 
