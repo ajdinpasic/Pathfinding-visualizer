@@ -1,6 +1,6 @@
 # Pathfinding visualizer
 
-☁️ Production ENV: pathfinding-visualizer-lyart.vercel.app
+☁️ Production ENV: https://pathfinding-visualizer-lyart.vercel.app/
 
 ## Description 📜
 
