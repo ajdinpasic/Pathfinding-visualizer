@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { Chain } from 'src/app/models/Chain';
 import { GridMenuService } from 'src/app/services/grid-menu.service';
 
@@ -20,7 +21,7 @@ export class GridComponent implements OnInit {
   public startImg: any = new Image();
   public endImg: any = new Image();
 
-  constructor(private GridMenuSvc: GridMenuService) {}
+  constructor(private GridMenuSvc: GridMenuService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     for (let i=0; i<this.shape.length;i++) {
@@ -432,6 +433,7 @@ export class GridComponent implements OnInit {
           path.push(temp.cameFrom);
           temp = temp.cameFrom;
         }
+        this.toastr.success("Shortest path found!","Done!")
         console.log("Done!"); // DONE
         //draw path
         for (let i = path.length - 1; i >= 0; i--) {
@@ -515,6 +517,7 @@ export class GridComponent implements OnInit {
     if (openSet.length <= 0) {
       //no solution
       console.log("no path")
+      this.toastr.error("Shortest path not found!","Done!")
        this.GridMenuSvc.setMenu(false)
     }
 
@@ -573,6 +576,7 @@ export class GridComponent implements OnInit {
           path.push(temp.cameFrom);
           temp = temp.cameFrom;
         }
+        this.toastr.success("Shortest path found!","Done!")
         console.log("Done!");
         //draw path
         for (let i = path.length - 1; i >= 0; i--) {
@@ -653,6 +657,7 @@ export class GridComponent implements OnInit {
     }
     if (openSet.length <= 0) {
       //no solution
+      this.toastr.error("Shortest path not found!","Done!")
       this.GridMenuSvc.setMenu(false)
     }
 
@@ -741,9 +746,9 @@ async bfsAlgo() {
     }
 
 if(successFound) {
-  // TODO: taostr msg
+  this.toastr.success("Shortest path found!","Done!")
 } else {
-  // TODO: taostr msg
+  this.toastr.error("Shortest path not found!","Done!")
   this.GridMenuSvc.setMenu(false)
 }
 
