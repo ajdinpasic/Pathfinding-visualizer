@@ -1,6 +1,6 @@
 # Pathfinding visualizer
 
-☁️ Production ENV: https://fan-shop.vercel.app/products
+☁️ Production ENV: pathfinding-visualizer-lyart.vercel.app
 
 ## Description 📜
 
