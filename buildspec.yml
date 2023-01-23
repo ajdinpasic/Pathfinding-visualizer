@@ -12,7 +12,7 @@ phases:
     commands:
       - n 16
       - echo installing dependencies...
-      - npm install --legacy-peer-deps
+      - npm install
       - npm i -g @angular/cli
   build:
     commands:
