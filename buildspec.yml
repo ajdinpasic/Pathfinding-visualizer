@@ -4,13 +4,12 @@ env:
   variables:
     CACHE_CONTROL: "86400"
     S3_BUCKET: "{{s3_bucket_url}}"
-    BUILD_FOLDER: "dist/angular-spa"
+    BUILD_FOLDER: "dist"
 phases:
   install:
     runtime-versions:
-      nodejs: 14
+      nodejs: 16.13.1
     commands:
-      - n 16
       - echo installing dependencies...
       - npm install
       - npm i -g @angular/cli
@@ -21,5 +20,5 @@ phases:
 artifacts:
   files:
     - "**/*"
-  base-directory: "dist/angular-spa*"
+  base-directory: "dist*"
   discard-paths: yes
