@@ -8,8 +8,9 @@ env:
 phases:
   install:
     runtime-versions:
-      nodejs: 16.13.1
+      nodejs: 14
     commands:
+      - n 16
       - echo installing dependencies...
       - npm install
       - npm i -g @angular/cli
