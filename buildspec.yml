@@ -8,7 +8,7 @@ env:
 phases:
   install:
     runtime-versions:
-      nodejs: 14
+      nodejs: 18
     commands:
       - echo installing dependencies...
       - npm install
@@ -20,5 +20,5 @@ phases:
 artifacts:
   files:
     - "**/*"
-  base-directory: "dist*"
+  base-directory: "angular-spa/dist*"
   discard-paths: yes
