@@ -4,11 +4,11 @@ env:
   variables:
     CACHE_CONTROL: "86400"
     S3_BUCKET: "{{s3_bucket_url}}"
-    BUILD_FOLDER: "dist"
+    BUILD_FOLDER: "angular-spa/dist"
 phases:
   install:
     runtime-versions:
-      nodejs: 14
+      nodejs: 16.13
     commands:
       - echo installing dependencies...
       - npm install
